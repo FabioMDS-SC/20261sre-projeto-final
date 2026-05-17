@@ -1,0 +1,13 @@
+# Ingestão e ETL
+duckdb
+boto3
+clickhouse-connect
+pandas
+python-dotenv
+
+# Transformação
+dbt-clickhouse
+
+# Visualização
+streamlit
+plotly

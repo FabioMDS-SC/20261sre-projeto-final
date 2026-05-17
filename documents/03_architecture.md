@@ -10,9 +10,9 @@ Este documento descreve a arquitetura do pipeline de processamento de pedidos No
 
 ## 2. Information Viewpoint (Ponto de Vista de Informação)
 - **Foco:** Ciclo de vida dos dados analíticos e camadas de dados.
-- **Camada Bronze (Raw/Object Storage):** Arquivos CSV originais (`northwind_orders.csv`, `northwind_order_details.csv`) persistidos no MinIO.
-- **Camada Silver (Staging/OLAP):** Dados limpos, validados (RF-09) e tipados em tabelas `MergeTree` do ClickHouse.
-- **Camada Gold (Analytics/Transformation):** Visões agregadas e tabelas de fatos/dimensões transformadas via SQL para alimentar o dashboard (RF-07).
+- **Camada Bronze (Ingestion/Raw):** Tabela `ingestion` no ClickHouse. Armazena os dados brutos dos CSVs em formato JSON, acompanhados de um timestamp de ingestão e o nome do arquivo de origem (`tag`). Isso permite reconstruir qualquer dado a partir da origem sem perda de informação.
+- **Camada Silver (Staging):** Dados extraídos do JSON via dbt, tipados e limpos em tabelas relacionais.
+- **Camada Gold (Analytics):** Visões agregadas e tabelas de fatos/dimensões transformadas via SQL.
 - **Metadados:** Logs de execução (RF-06), logs de auditoria (RF-10) e métricas de performance (SLIs).
 
 ## 3. Computational Viewpoint (Ponto de Vista Computacional)
@@ -31,11 +31,12 @@ Este documento descreve a arquitetura do pipeline de processamento de pedidos No
 
 ## 5. Technology Viewpoint (Ponto de Vista de Tecnologia)
 - **Stack Tecnológica Local:**
-    - **Object Storage:** MinIO.
-    - **Banco OLAP:** ClickHouse.
-    - **Ingestão/ETL:** Python 3.x & DuckDB.
+    - **Object Storage:** MinIO (Porta 9000/9001).
+    - **Banco OLAP:** ClickHouse (Portas 8123/9004).
+    - **Ingestão/ETL:** Python 3.x, DuckDB e Boto3.
     - **Transformação:** dbt-clickhouse.
-    - **Visualização:** Streamlit.
+    - **Visualização:** Streamlit (Porta 8501).
+    - **Automação:** Scripts Python (`scripts/setup_minio.py` e `scripts/setup_clickhouse.py`) orquestrados por `setup.sh`.
     - **Infraestrutura:** Docker & Docker Compose.
 
 ---

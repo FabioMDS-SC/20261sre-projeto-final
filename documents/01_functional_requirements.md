@@ -28,7 +28,7 @@ Este documento descreve as funcionalidades do sistema de processamento de pedido
 ## 4. Visualização
 | ID | Título | Requisito (EARS) | Prioridade |
 |:---|:---|:---|:---|
-| **RF-07** | Dashboard de Vendas | O dashboard Streamlit deve exibir o volume total de pedidos e a lista de produtos mais vendidos com base nos dados do ClickHouse. | Must-have |
+| **RF-07** | Dashboard de Vendas | O dashboard Streamlit deve exibir o volume total de pedidos e a lista de produtos mais vendidos com base nos dados do ClickHouse. | Implementado | Must-have |
 
 ---
 

@@ -1,42 +1,47 @@
 # Northwind Modern Data Pipeline
 
-Este projeto implementa um pipeline de dados moderno para o dataset Northwind, utilizando uma arquitetura local escalável e de alta performance.
+Este projeto implementa um pipeline de dados moderno para o dataset Northwind, utilizando uma arquitetura local escalável e de alta performance baseada na metodologia Medallion (Bronze, Silver, Gold).
 
-## 🚀 Stack Tecnológica
+## 🚀 Como Executar
 
-- **Object Storage:** MinIO (S3-compatible)
-- **Banco OLAP:** ClickHouse
-- **Ingestão/ETL:** Python & DuckDB
-- **Transformação:** dbt (data build tool)
-- **Dashboard:** Streamlit
-- **Infraestrutura:** Docker & Docker Compose
+### 1. Subir a Infraestrutura
+Certifique-se de ter o Docker e Docker Compose instalados e execute:
+```bash
+docker-compose up -d --build
+```
 
-## 🏗️ Arquitetura (RM-ODP)
+### 2. Configurar o Ambiente e Ingestão
+Execute o script de setup automático dentro do container da aplicação:
+```bash
+docker exec -it app-northwind ./setup.sh
+```
+Este comando irá:
+- Criar os buckets no MinIO e subir os CSVs originais.
+- Criar a tabela `ingestion` (Bronze) no ClickHouse.
+- Executar a ingestão dos dados brutos em formato JSON via DuckDB.
+- Rodar as transformações dbt (Silver e Gold).
 
-A arquitetura do sistema é baseada no framework RM-ODP, organizada em camadas:
+### 3. Acessar o Dashboard
+O dashboard Streamlit estará disponível em:
+👉 [http://localhost:8501](http://localhost:8501)
 
-1.  **Camada Bronze (Raw):** Arquivos CSV brutos no MinIO.
-2.  **Camada Silver (Staging):** Dados validados e tipados no ClickHouse.
-3.  **Camada Gold (Analytics):** Tabelas agregadas e modelos de negócio via dbt.
+## 🏗️ Arquitetura de Dados (Medallion)
 
-Para mais detalhes, consulte a [Documentação de Arquitetura](documents/03_architecture.md).
+1.  **Bronze (Raw JSON)**: Dados brutos ingeridos via DuckDB diretamente dos CSVs para a tabela `ingestion` no ClickHouse, preservando o formato original em JSON para máxima resiliência e rastreabilidade.
+2.  **Silver (Staging)**: Modelos dbt (`stg_orders`, `stg_order_details`) que extraem e tipam os dados do JSON usando funções nativas do ClickHouse.
+3.  **Gold (Analytics)**: Visão consolidada (`fct_sales`) pronta para consumo pelo dashboard, com KPIs pré-calculados.
+
+## 🛠️ Stack Tecnológica
+- **Object Storage**: MinIO (S3-compatible).
+- **Banco de Dados**: ClickHouse (OLAP/Analytics).
+- **ETL/Ingestão**: Python 3.11 & DuckDB.
+- **Transformação**: dbt-clickhouse.
+- **Visualização**: Streamlit & Plotly.
+- **Infraestrutura**: Docker & Docker Compose.
 
 ## 📄 Documentação do Projeto
 
 - [01. Requisitos Funcionais](documents/01_functional_requirements.md) - Definição em sintaxe EARS e priorização MoSCoW.
 - [02. Requisitos Não Funcionais](documents/02_non_functional_requirements.md) - Atributos de qualidade (ISO 25010) e SLIs/SLOs.
 - [03. Arquitetura do Sistema](documents/03_architecture.md) - Visões RM-ODP e ADRs.
-
-## 🛠️ Como Executar (Em breve)
-
-O ambiente é orquestrado via Docker Compose. As instruções de configuração e execução serão adicionadas conforme a implementação do pipeline avançar.
-
----
-
-## 📊 Modelo de Dados
-
-O projeto foca no processamento de `Orders` e `Order Details` para gerar insights de vendas.
-
-### Tabelas Principais (ClickHouse)
-- `orders`: Cabeçalho dos pedidos, particionado por mês.
-- `order_details`: Detalhes dos itens vendidos, com compressão colunar.
+- [08. Design do Sistema](documents/08_system_design.md) - Detalhes da implementação e infraestrutura.

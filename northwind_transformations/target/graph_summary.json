@@ -1,0 +1,1 @@
+{"_invocation_id": "23736429-c488-46d4-85c8-61c689144361", "linked": {"0": {"name": "model.northwind_transformations.fct_sales", "type": "model"}, "1": {"name": "model.northwind_transformations.stg_orders", "type": "model", "succ": [0]}, "2": {"name": "model.northwind_transformations.stg_order_details", "type": "model", "succ": [0]}}}
