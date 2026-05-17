@@ -1,90 +1,42 @@
-# 20261sre-projeto-final
+# Northwind Modern Data Pipeline
 
-Este projeto realiza o processamento e análise dos dados do dataset Northwind, focando em uma arquitetura moderna de dados (Modern Data Stack).
+Este projeto implementa um pipeline de dados moderno para o dataset Northwind, utilizando uma arquitetura local escalável e de alta performance.
 
-## 1. Modelagem de Dados
+## 🚀 Stack Tecnológica
 
-Baseado nos arquivos `northwind_orders.csv` e `northwind_order_details.csv`.
+- **Object Storage:** MinIO (S3-compatible)
+- **Banco OLAP:** ClickHouse
+- **Ingestão/ETL:** Python & DuckDB
+- **Transformação:** dbt (data build tool)
+- **Dashboard:** Streamlit
+- **Infraestrutura:** Docker & Docker Compose
 
-### Modelo Conceitual
-- **Entidades:**
-  - **Pedido (Order):** Representa a transação de compra.
-  - **Item do Pedido (Order Detail):** Representa os produtos individuais dentro de um pedido.
-- **Relacionamento:** Um Pedido possui um ou mais Itens (1:N).
+## 🏗️ Arquitetura (RM-ODP)
 
-### Modelo Lógico
-- **Tabela `orders`:**
-  - `order_id` (PK, Integer)
-  - `customer_id` (String/FK)
-  - `employee_id` (Integer/FK)
-  - `order_date` (Date)
-  - `required_date` (Date)
-  - `shipped_date` (Date)
-  - `ship_via` (Integer)
-  - `freight` (Decimal)
-  - `ship_name`, `ship_address`, `ship_city`, `ship_region`, `ship_postal_code`, `ship_country` (String)
-- **Tabela `order_details`:**
-  - `order_id` (PK/FK, Integer)
-  - `product_id` (PK, Integer)
-  - `unit_price` (Decimal)
-  - `quantity` (Integer)
-  - `discount` (Float)
+A arquitetura do sistema é baseada no framework RM-ODP, organizada em camadas:
 
-### Modelo Físico (ClickHouse)
-```sql
-CREATE TABLE orders (
-    order_id Int32,
-    customer_id String,
-    employee_id Int32,
-    order_date Date,
-    required_date Date,
-    shipped_date Nullable(Date),
-    ship_via Int32,
-    freight Decimal(18, 2),
-    ship_name String,
-    ship_address String,
-    ship_city String,
-    ship_region Nullable(String),
-    ship_postal_code Nullable(String),
-    ship_country String
-) ENGINE = MergeTree()
-ORDER BY order_id
-PARTITION BY toYYYYMM(order_date);
+1.  **Camada Bronze (Raw):** Arquivos CSV brutos no MinIO.
+2.  **Camada Silver (Staging):** Dados validados e tipados no ClickHouse.
+3.  **Camada Gold (Analytics):** Tabelas agregadas e modelos de negócio via dbt.
 
-CREATE TABLE order_details (
-    order_id Int32,
-    product_id Int32,
-    unit_price Decimal(18, 2),
-    quantity Int16,
-    discount Float32
-) ENGINE = MergeTree()
-ORDER BY (order_id, product_id);
-```
+Para mais detalhes, consulte a [Documentação de Arquitetura](documents/03_architecture.md).
 
-## 2. Arquitetura da Stack
+## 📄 Documentação do Projeto
 
-```mermaid
-graph LR
-    subgraph Ingestão
-        A[CSV Files] --> B[Python/Airflow]
-    end
-    subgraph Armazenamento
-        B --> C[(MinIO / S3)]
-    end
-    subgraph Processamento
-        C --> D[dbt / ClickHouse]
-    end
-    subgraph Camada Analítica
-        D --> E[ClickHouse OLAP]
-        E --> F[Streamlit Dashboard]
-    end
-```
+- [01. Requisitos Funcionais](documents/01_functional_requirements.md) - Definição em sintaxe EARS e priorização MoSCoW.
+- [02. Requisitos Não Funcionais](documents/02_non_functional_requirements.md) - Atributos de qualidade (ISO 25010) e SLIs/SLOs.
+- [03. Arquitetura do Sistema](documents/03_architecture.md) - Visões RM-ODP e ADRs.
 
-## 3. Decisões e Trade-offs
+## 🛠️ Como Executar (Em breve)
 
-| Decisão | Alternativa Descartada | Motivo da Escolha |
-| :--- | :--- | :--- |
-| **ClickHouse** | PostgreSQL | O ClickHouse é um banco OLAP que oferece performance superior para consultas analíticas e agregações em grandes volumes de dados. |
-| **MinIO (S3)** | HDFS | MinIO é compatível com a API S3, facilitando a portabilidade para nuvem e sendo mais leve para ambientes de container/Codespaces. |
-| **Streamlit** | Tableau/PowerBI | Streamlit permite manter a visualização como código (Python), facilitando o versionamento e integração no pipeline. |
-| **MergeTree Engine** | Log Engine | MergeTree suporta índices, partições e é a engine padrão para alta performance no ClickHouse. |
+O ambiente é orquestrado via Docker Compose. As instruções de configuração e execução serão adicionadas conforme a implementação do pipeline avançar.
+
+---
+
+## 📊 Modelo de Dados
+
+O projeto foca no processamento de `Orders` e `Order Details` para gerar insights de vendas.
+
+### Tabelas Principais (ClickHouse)
+- `orders`: Cabeçalho dos pedidos, particionado por mês.
+- `order_details`: Detalhes dos itens vendidos, com compressão colunar.

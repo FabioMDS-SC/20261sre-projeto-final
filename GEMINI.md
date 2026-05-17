@@ -1,20 +1,26 @@
 # Project Instructions (GEMINI.md)
 
-Welcome to the **20261sre-projeto-final** project. This file contains project-wide conventions, architecture rules, and workflows for our team.
+Este arquivo contém as convenções, regras de arquitetura e fluxos de trabalho do projeto **20261sre-projeto-final**.
 
-## Project Overview
-- **Name:** 20261sre-projeto-final
-- **Context:** This project appears to involve data from the Northwind database (CSV format), likely for SRE-related tasks or data analysis.
+## Visão Geral do Projeto
+- **Nome:** 20261sre-projeto-final
+- **Contexto:** Modernização do pipeline de dados Northwind utilizando uma Modern Data Stack local (MinIO, ClickHouse, dbt).
 
-## Conventions
-- **Language:** (To be determined - e.g., Python, SQL, Shell)
-- **Formatting:** Use project-standard linters and formatters.
-- **Documentation:** Maintain clear and concise documentation in Markdown.
+## Convenções
+- **Linguagem Principal:** Python 3.x (ETL e Ingestão).
+- **Banco de Dados:** ClickHouse (OLAP/Analytics).
+- **Armazenamento de Objetos:** MinIO (S3-compatible).
+- **Transformação de Dados:** dbt (data build tool).
+- **Visualização:** Streamlit.
+- **Ambiente:** Docker & Docker Compose.
 
-## Workflows
-- **Development:** Follow the Research -> Strategy -> Execution lifecycle.
-- **Testing:** Always include verification steps for changes.
-- **Commits:** Write descriptive commit messages following the project's style.
+## Fluxos de Trabalho
+- **Desenvolvimento:** Pesquisa -> Estratégia -> Execução.
+- **Requisitos:** Seguir as diretrizes de EARS para RFs e ISO 25010 para RNFs.
+- **Arquitetura:** Baseada no framework RM-ODP.
+- **Commits:** Mensagens claras e concisas, preferencialmente em português.
 
-## Subdirectory Instructions
-- None yet.
+## Documentação Técnica
+- [Requisitos Funcionais](documents/01_functional_requirements.md)
+- [Requisitos Não Funcionais](documents/02_non_functional_requirements.md)
+- [Arquitetura do Sistema](documents/03_architecture.md)
