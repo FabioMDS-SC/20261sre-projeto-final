@@ -45,3 +45,4 @@ O dashboard Streamlit estará disponível em:
 - [02. Requisitos Não Funcionais](documents/02_non_functional_requirements.md) - Atributos de qualidade (ISO 25010) e SLIs/SLOs.
 - [03. Arquitetura do Sistema](documents/03_architecture.md) - Visões RM-ODP e ADRs.
 - [08. Design do Sistema](documents/08_system_design.md) - Detalhes da implementação e infraestrutura.
+- [10. Revisão de Arquitetura & Roadmap](documents/10_architecture_review.md) - Avaliação ATAM e Táticas de Len Bass.
