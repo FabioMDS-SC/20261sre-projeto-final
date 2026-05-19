@@ -25,6 +25,24 @@ Este comando irá:
 O dashboard Streamlit estará disponível em:
 👉 [http://localhost:8501](http://localhost:8501)
 
+## 🛡️ Resiliência, Performance e Qualidade (Waves 1-3)
+
+Recentemente, o pipeline passou por um ciclo de modernização arquitetural (conforme `documents/10_architecture_review.md`), atingindo os seguintes marcos:
+
+- **Resiliência (Wave 1):** Implementação de retentativas com backoff exponencial (Tenacity), tratamento robusto de erros e validação de integridade de arquivos.
+- **Performance (Wave 2):** Ingestão otimizada em **Chunks** (RNF-03), processando dados de forma eficiente em memória, e implementação de **Heartbeats** para validação de saúde dos serviços.
+- **Observabilidade:** Logs estruturados em formato **JSON** em todo o pipeline para facilitar a integração com ferramentas de monitoramento.
+- **Testabilidade (Wave 3):** Suite completa de testes unitários e de integração utilizando **Pytest**.
+- **Segurança:** Configuração de **Pre-commit Hooks** para detecção de segredos e garantia de padrões de código.
+
+## 🧪 Como Rodar os Testes
+
+Para garantir a integridade do pipeline, execute a suite de testes:
+```bash
+pip install pytest pytest-mock
+PYTHONPATH=. pytest tests/
+```
+
 ## 🏗️ Arquitetura de Dados (Medallion)
 
 1.  **Bronze (Raw JSON)**: Dados brutos ingeridos via DuckDB diretamente dos CSVs para a tabela `ingestion` no ClickHouse, preservando o formato original em JSON para máxima resiliência e rastreabilidade.
