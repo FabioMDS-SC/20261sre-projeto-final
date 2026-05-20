@@ -35,13 +35,23 @@ Recentemente, o pipeline passou por um ciclo de modernização arquitetural (con
 - **Testabilidade (Wave 3):** Suite completa de testes unitários e de integração utilizando **Pytest**.
 - **Segurança:** Configuração de **Pre-commit Hooks** para detecção de segredos e garantia de padrões de código.
 
-## 🧪 Como Rodar os Testes
+## 🧪 Testes e Qualidade
 
-Para garantir a integridade do pipeline, execute a suite de testes:
-```bash
-pip install pytest pytest-mock
-PYTHONPATH=. pytest tests/
-```
+Para garantir a integridade e escalabilidade do pipeline, o projeto conta com:
+
+- **Testes Automatizados:** Suite de testes unitários e de integração utilizando **Pytest**.
+  ```bash
+  pip install pytest pytest-mock
+  PYTHONPATH=. pytest tests/
+  ```
+
+- **Testes de Carga e Performance (k6):** Validação de requisitos não funcionais (RNFs) sob estresse.
+  - **Tempo de Resposta:** Processamento de 100k linhas em apenas **7.62s** (RNF-02).
+  - **Eficiência de Memória:** Pico de **180.94 MB** via processamento em chunks (RNF-03).
+  - **Responsividade UI:** Latência p95 de **9.61ms** para o dashboard (RNF-05).
+  - **Completude:** 100% dos dados carregados (RNF-01).
+
+Detalhes completos em: [Relatório de Testes de Carga](documents/05_test_plan_load.md).
 
 ## 🏗️ Arquitetura de Dados (Medallion)
 
